@@ -1,0 +1,124 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>ESP Sensor Data</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <style>
+    html {
+      font-family: Arial, Helvetica, sans-serif;
+      text-align: center;
+    }
+    h1 {
+      font-size: 1.8rem;
+      color: white;
+    }
+    h2 {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #143642;
+    }
+    .topnav {
+      overflow: hidden;
+      background-color: #143642;
+    }
+    body {
+      margin: 0;
+    }
+    .content {
+      padding: 30px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .card {
+      background-color: #F8F7F9;
+      box-shadow: 2px 2px 12px 1px rgba(140,140,140,.5);
+      padding-top: 10px;
+      padding-bottom: 20px;
+    }
+    .sensor-data {
+      font-size: 1.5rem;
+      color: #8c8c8c;
+      font-weight: bold;
+    }
+    .navlink {
+      font-size: 1.2rem;
+      color: #0f8b8d;
+      text-decoration: none;
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="topnav">
+    <h1>ESP Sensor Data</h1>
+  </div>
+  <div class="content">
+    <a class="navlink" href="/">Go to GPIO Control</a>
+    <div class="card">
+      <h2>Temperature</h2>
+      <p class="sensor-data">Temperature: <span id="temperature">No data.</span> &deg;C</p>
+    </div>
+    <div class="card">
+      <h2>Humidity</h2>
+      <p class="sensor-data">Humidity: <span id="humidity">No data.</span> %</p>
+    </div>
+    <div class="card">
+      <h2>Heat Index</h2>
+      <p class="sensor-data">Heat Index: <span id="heatindex">No data.</span> &deg;C</p>
+    </div>
+    <div class="card">
+      <h2>CO2 Levels</h2>
+      <p class="sensor-data">CO2: <span id="co2">No data.</span> ppm</p>
+    </div>
+  </div>
+  <script>
+    var gateway = `ws://${window.location.hostname}/ws`;
+    var websocket;
+
+    function initWebSocket() {
+      console.log('Trying to open a WebSocket connection...');
+      websocket = new WebSocket(gateway);
+      websocket.onopen = onOpen;
+      websocket.onclose = onClose;
+      websocket.onmessage = onMessage;
+    }
+
+    function onOpen(event) {
+      console.log('Connection opened');
+    }
+
+    function onClose(event) {
+      console.log('Connection closed');
+      setTimeout(initWebSocket, 2000);
+    }
+
+    function onMessage(event) {
+      var data = JSON.parse(event.data);
+      console.log('Received data:', data); // Debug log
+
+      var temperatureElement = document.getElementById('temperature');
+      var humidityElement = document.getElementById('humidity');
+      var heatIndexElement = document.getElementById('heatindex');
+      var co2Element = document.getElementById('co2');
+
+      if (temperatureElement && humidityElement && heatIndexElement && co2Element) {
+        temperatureElement.innerHTML = data.temperature;
+        humidityElement.innerHTML = data.humidity;
+        heatIndexElement.innerHTML = data.heatindex;
+        co2Element.innerHTML = data.co2;
+      } else {
+        console.log('One or more elements not found');
+        console.log('temperatureElement:', temperatureElement);
+        console.log('humidityElement:', humidityElement);
+        console.log('heatIndexElement:', heatIndexElement);
+        console.log('co2Element:', co2Element);
+      }
+    }
+
+    window.addEventListener('load', function(event) {
+      initWebSocket();
+    });
+  </script>
+</body>
+</html>
