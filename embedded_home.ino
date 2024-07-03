@@ -27,7 +27,7 @@ DHT dht(DHTPIN, DHTTYPE);
 MQ135 mq135(MQ135PIN);
 
 bool ledState26 = false;
-bool ledState25 = false;
+bool ledState25 = true;
 const int ledPin26 = 26;
 const int ledPin25 = 25;
 
@@ -131,7 +131,7 @@ void setup(){
   pinMode(ledPin26, OUTPUT);
   pinMode(ledPin25, OUTPUT);
   digitalWrite(ledPin26, LOW);
-  digitalWrite(ledPin25, LOW);
+  digitalWrite(ledPin25, HIGH);
 
   dht.begin();
   mq135.calibrate(); 
@@ -159,6 +159,15 @@ void setup(){
   // Route for sensor data page
   server.on("/sensors", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(SPIFFS, "/sensors.html", "text/html", false, processor);
+  });
+
+  server.serveStatic("/co2.png", SPIFFS, "/co2.png");
+  server.serveStatic("/heatindex.png", SPIFFS, "/heatindex.png");
+  server.serveStatic("/humidity.png", SPIFFS, "/humidity.png");
+  server.serveStatic("/temp.png", SPIFFS, "/temp.png");
+
+  server.onNotFound([](AsyncWebServerRequest *request){
+    request->send(404);
   });
 
   // Start server

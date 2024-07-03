@@ -90,13 +90,13 @@
   <div class="content">
     <a class="navlink" href="/sensors">← Go to Sensor Data</a>
     <div class="card">
-      <h2>Output - GPIO 26</h2>
-      <p class="state">state: <span id="state26">OFF</span></p>
+      <h2>GPIO 26: Door Lock</h2>
+      <p class="state">State: <span id="state26">Loading...</span></p>
       <p><button id="button26" class="button">Toggle GPIO 26</button></p>
     </div>
     <div class="card">
-      <h2>Output - GPIO 25</h2>
-      <p class="state">state: <span id="state25">OFF</span></p>
+      <h2>GPIO 25: Lightbulb</h2>
+      <p class="state">State: <span id="state25">Loading...</span></p>
       <p><button id="button25" class="button">Toggle GPIO 25</button></p>
     </div>
   </div>
@@ -128,8 +128,8 @@
     var data = JSON.parse(event.data);
     
     if (data.gpio26 !== undefined && data.gpio25 !== undefined) {
-      document.getElementById('state26').innerHTML = data.gpio26 == "1" ? "ON" : "OFF";
-      document.getElementById('state25').innerHTML = data.gpio25 == "1" ? "ON" : "OFF";
+      document.getElementById('state26').innerHTML = data.gpio26 == "1" ? "Unlocked" : "Locked";
+      document.getElementById('state25').innerHTML = data.gpio25 == "1" ? "Normally Open" : "Normally Closed";
       console.log('Updated states: GPIO 26:', data.gpio26, 'GPIO 25:', data.gpio25);
     } else {
       console.log('No GPIO states found in the message');
