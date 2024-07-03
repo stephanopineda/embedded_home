@@ -23,6 +23,7 @@
       background-color: #143642;
     }
     body {
+      background-color: #F8F7F9;
       margin: 0;
     }
     .content {
@@ -31,21 +32,28 @@
       margin: 0 auto;
     }
     .card {
-      background-color: #F8F7F9;
+      border-left: 8px solid #143642;
+      background-color: #fff;
       box-shadow: 2px 2px 12px 1px rgba(140,140,140,.5);
-      padding-top: 10px;
-      padding-bottom: 20px;
+      padding: 10px;
+      border-radius: 10px;
+      margin: 10px;
+      margin-top: 20px;
     }
     .sensor-data {
       font-size: 1.5rem;
-      color: #8c8c8c;
+      color: #0f8b8d;
       font-weight: bold;
     }
     .navlink {
       font-size: 1.2rem;
       color: #0f8b8d;
       text-decoration: none;
+      font-weight: bold;
       margin: 10px;
+      border-radius: 5px;
+      padding: 10px 20px;
+      background-color: #fff;
     }
   </style>
 </head>
@@ -54,22 +62,22 @@
     <h1>ESP Sensor Data</h1>
   </div>
   <div class="content">
-    <a class="navlink" href="/">Go to GPIO Control</a>
+    <a class="navlink" href="/">← Go to GPIO Control</a>
     <div class="card">
       <h2>Temperature</h2>
-      <p class="sensor-data">Temperature: <span id="temperature">No data.</span> &deg;C</p>
+      <p class="sensor-data"><span id="temperature">No data.</span> &deg;C</p>
     </div>
     <div class="card">
       <h2>Humidity</h2>
-      <p class="sensor-data">Humidity: <span id="humidity">No data.</span> %</p>
+      <p class="sensor-data"><span id="humidity">No data.</span> %</p>
     </div>
     <div class="card">
       <h2>Heat Index</h2>
-      <p class="sensor-data">Heat Index: <span id="heatindex">No data.</span> &deg;C</p>
+      <p class="sensor-data"><span id="heatindex">No data.</span> &deg;C</p>
     </div>
     <div class="card">
       <h2>CO2 Levels</h2>
-      <p class="sensor-data">CO2: <span id="co2">No data.</span> ppm</p>
+      <p class="sensor-data"><span id="co2">No data.</span> ppm</p>
     </div>
   </div>
   <script>
