@@ -91,12 +91,12 @@
     <a class="navlink" href="/sensors">← Go to Sensor Data</a>
     <div class="card">
       <h2>Output - GPIO 26</h2>
-      <p class="state">state: <span id="state26">%STATE26%</span></p>
+      <p class="state">state: <span id="state26">OFF</span></p>
       <p><button id="button26" class="button">Toggle GPIO 26</button></p>
     </div>
     <div class="card">
       <h2>Output - GPIO 25</h2>
-      <p class="state">state: <span id="state25">%STATE25%</span></p>
+      <p class="state">state: <span id="state25">OFF</span></p>
       <p><button id="button25" class="button">Toggle GPIO 25</button></p>
     </div>
   </div>
@@ -107,28 +107,37 @@
   window.addEventListener('load', onLoad);
 
   function initWebSocket() {
+    console.log('Initializing WebSocket connection...');
     websocket = new WebSocket(gateway);
     websocket.onopen    = onOpen;
     websocket.onclose   = onClose;
-    websocket.onmessage = onMessage; // <-- add this line
+    websocket.onmessage = onMessage;
   }
 
   function onOpen(event) {
-    console.log('Connection opened');
+    console.log('WebSocket connection opened');
   }
 
   function onClose(event) {
-    console.log('Connection closed');
+    console.log('WebSocket connection closed');
     setTimeout(initWebSocket, 2000);
   }
 
   function onMessage(event) {
+    console.log('Message received from server: ', event.data);
     var data = JSON.parse(event.data);
-    document.getElementById('state26').innerHTML = data.gpio26 == "true" ? "ON" : "OFF";
-    document.getElementById('state25').innerHTML = data.gpio25 == "true" ? "ON" : "OFF";
+    
+    if (data.gpio26 !== undefined && data.gpio25 !== undefined) {
+      document.getElementById('state26').innerHTML = data.gpio26 == "1" ? "ON" : "OFF";
+      document.getElementById('state25').innerHTML = data.gpio25 == "1" ? "ON" : "OFF";
+      console.log('Updated states: GPIO 26:', data.gpio26, 'GPIO 25:', data.gpio25);
+    } else {
+      console.log('No GPIO states found in the message');
+    }
   }
 
   function onLoad(event) {
+    console.log('Page loaded');
     initWebSocket();
     initButton();
   }
@@ -139,10 +148,12 @@
   }
 
   function toggleGPIO26(){
+    console.log('Toggling GPIO 26');
     websocket.send('toggle26');
   }
 
   function toggleGPIO25(){
+    console.log('Toggling GPIO 25');
     websocket.send('toggle25');
   }
 </script>
