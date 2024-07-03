@@ -43,6 +43,11 @@ void notifyClients() {
   ws.textAll(message);
 }
 
+void notifyClient(AsyncWebSocketClient *client) {
+  String message = "{\"gpio26\":\"" + String(ledState26) + "\", \"gpio25\":\"" + String(ledState25) + "\"}";
+  client->text(message);
+}
+
 void sendSensorData() {
   float temperature = dht.readTemperature();
   float humidity = dht.readHumidity();
@@ -77,6 +82,7 @@ void onEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType 
   switch (type) {
     case WS_EVT_CONNECT:
       Serial.printf("WebSocket client #%u connected from %s\n", client->id(), client->remoteIP().toString().c_str());
+      notifyClient(client); // Notify the client with the current state
       break;
     case WS_EVT_DISCONNECT:
       Serial.printf("WebSocket client #%u disconnected\n", client->id());
